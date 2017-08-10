@@ -1,0 +1,9 @@
+include *.py
+include LICENSE
+include README.md
+include CHANGELOG.rst
+recursive-include bin *
+recursive-include doc *
+recursive-include artemis *
+recursive-include tests *
+global-exclude *.pyc

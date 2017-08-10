@@ -1,0 +1,15 @@
+*.pyc
+.*.sw*
+/logs
+/run
+/env
+/build
+/dist
+*.egg*
+/tests/*.db
+/.coverage
+/.tox
+/htmlcov
+/docs
+
+/docs/_build
