@@ -12,7 +12,7 @@ import server
 
 
 class ArtemisScheduler(object):
-  def __init__(self,dbhandler,timer=60,localdb=False,hpfeeds=True):
+  def __init__(self,dbhandler,timer=60,localdb=True,hpfeeds=True):
     self.duration = timer
     self.dbhandler = dbhandler
     self.localdb = localdb

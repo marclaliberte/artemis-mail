@@ -33,13 +33,15 @@ class DBHandler(object):
 #    attachpath = server.artemisconf.get('analyzer', 'attachpath')
 #    inlinepath = server.artemisconf.get('analyzer', 'inlinepath')    
     
+
+    """    
     truncate = ['truncate attachments','truncate links', 'truncate sensors', 'truncate spam']
     for query in truncate:
       try:
         exeSql.execute(query)
       except Exception, e:
         logging.critical("[-] Error (artemispushtodb) truncate %s" % str(e))
-            
+    """        
     
     for record in server.QueueReceiver.deep_records:
       logging.info("Records are %d" % len(server.QueueReceiver.deep_records))
@@ -47,11 +49,13 @@ class DBHandler(object):
       values = str(record['s_id']), str(record['ssdeep']), str(record['to']), str(record['from']), str(record['text']), str(record['html']), str(record['subject']), str(record['headers']), str(record['sourceIP']), str(record['sensorID']), str(record['firstSeen']), str(record['relayed']), str(record['counter']), str(record['len']), str(record['firstRelayed']), str(record['user'])
       insertSpam = "INSERT INTO `spam`(`id`, `ssdeep`, `to`, `from`, `textMessage`, `htmlMessage`, `subject`, `headers`, `sourceIP`, `sensorID`, `firstSeen`, `relayCounter`, `totalCounter`, `length`, `relayTime`, `user`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
+      """
       try:
         exeSql.execute(insertSpam, values)
       except mdb.Error, e:
         logging.critical("[-] Error (artemispushtodb insert_spam) - %d: %s" % (e.args[0], e.args[1]))
-
+      """
+ 
         # Checking for attachments and dumping into directory, if any. Also storing information in database.
       if len(record['attachmentFile']) > 0:
         i = 0
@@ -64,13 +68,14 @@ class DBHandler(object):
           #record['attachmentFile'][i] = path
           values = str(record['s_id']), str(mdb.escape_string(record['attachmentFileName'][i])), 'attach', str(record['attachmentFileMd5'][i]), str(record['date']), str(mdb.escape_string(path))
           insertAttachment = "INSERT INTO `attachments`(`spam_id`, `file_name`, `attach_type`, `attachmentFileMd5`, `date`, `attachment_file_path`) VALUES (%s, %s, %s, %s, %s, %s)"
-              
+         
+          """     
           try:
             exeSql.execute(insertAttachment, values)
             i += 1
-
           except mdb.Error, e:
             logging.critical("[-] Error (artemispushtodb insert_attachment) - %d: %s" % (e.args[0], e.args[1]))
+          """
 
         # Checking for inline attachment files
       if len(record['inlineFile']) > 0:
@@ -84,12 +89,14 @@ class DBHandler(object):
           values = str(record['s_id']), str(mdb.escape_string(record['inlineFileName'][i])), 'inline', str(record['inlineFileMd5'][i]), str(record['date']), str(mdb.escape_string(path))
           insertInline = "INSERT INTO `attachments`(`spam_id`, `file_name`, `attach_type`, `attachmentFileMd5`, `date`, `attachment_file_path`) VALUES (%s, %s, %s, %s, %s, %s)"
 
+          """
           try:
             exeSql.execute(insertInline, values)
             i += 1
           except mdb.Error, e:
             logging.critical("[-] Error (artemispushtodb insert_inline) - %d: %s" % (e.args[0], e.args[1]))
-
+          """
+ 
         # Checking for links in spams and storing them
       if len(record['links']) > 0:
         i = 0
@@ -97,24 +104,29 @@ class DBHandler(object):
           values =  str(record['s_id']), str(link), str(record['date'])
           insertLink = "INSERT INTO `links` (`spam_id`, `hyperlink`, `date`) VALUES (%s, %s, %s)"
 
+          """
           try:
             exeSql.execute(insertLink, values)
             i += 1
           except mdb.Error, e:
             logging.critical("[-] Error (artemispushtodb insert_link) - %d: %s" % (e.args[0], e.args[1]))
 
+          """
 
         # Extracting and saving name of the sensor
       values = str(record['s_id']), str(record['sensorID']), str(record['date'])
       insertSensor = "INSERT INTO `sensors` (`spam_id`, `sensorID`, `date`) VALUES (%s, %s, %s)"
 
+      """
       try:
         exeSql.execute(insertSensor, values)
       except mdb.Error, e:
         logging.critical("[-] Error (artemispushtodb insert_sensor - %d: %s" % (e.args[0], e.args[1]))
-          
-    subprocess.Popen(['python', os.path.dirname(os.path.realpath(__file__)) + '/artemismaindb.py'])
-    logging.info("Shivamaindb called")
+      """         
+
+     
+#    subprocess.Popen(['python', os.path.dirname(os.path.realpath(__file__)) + '/artemismaindb.py'])
+#    logging.info("Shivamaindb called")
 #    exeSql.close()
   
   def sendfeed(self):
