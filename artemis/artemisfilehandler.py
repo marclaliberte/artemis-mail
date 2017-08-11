@@ -36,7 +36,7 @@ class FileHandler(object):
 
   def send_attach(self):
     logging.debug("[+] artemisfilehandler attempting to send attachment")
-    files = [f for f in os.listdir(path['attach']) if os.path.isfile(os.path.join(path['attach'], f))]
+    files = [f for f in os.listdir(self.path['attach']) if os.path.isfile(os.path.join(self.path['attach'], f))]
  
     if len(files) > 0:
       for f in files:
@@ -44,7 +44,7 @@ class FileHandler(object):
         spam_id = f.split('-')[0]
         name = f.split('-')[2]
 
-        with open(path['attach']+f) as fp:
+        with open(self.path['attach']+f) as fp:
           attachment = base64.b64encode(fp.read())
 
         d = {'s_id': spam_id, 'attachment':attachment, 'name':name}
@@ -53,7 +53,7 @@ class FileHandler(object):
           hpc.publish(channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
-        shutil.move(path['attach']+f, path['hpfeedattach'])
+        shutil.move(self.path['attach']+f, self.path['hpfeedattach'])
     else:
       logging.info("Nothing to send on hpfeeds channel artemis.attachments")
 
