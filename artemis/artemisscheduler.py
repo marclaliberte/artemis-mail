@@ -25,8 +25,11 @@ class ArtemisScheduler(object):
     if self.localdb is True:
       logging.info("[+]artemisscheduler.py: Pushing data to local db")
       self.dbhandler.push()
-
-    if self.hpfeeds is True:
+      if self.hpfeeds is True:
+        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
+        self.dbhandler.sendfeed()
+    else: 
+      if self.hpfeeds is True:
       logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
       self.dbhandler.sendfeed()
 

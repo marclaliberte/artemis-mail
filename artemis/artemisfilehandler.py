@@ -33,6 +33,7 @@ class FileHandler(object):
     self.lock = threading.Lock()
 
   def send_attach():
+    logging.debug("[+] artemisfilehandler attempting to send attachment")
     files = [f for f in os.listdir(path['attach']) if os.path.isfile(os.path.join(path['attach'], f))]
  
     if len(files) > 0:
@@ -55,6 +56,7 @@ class FileHandler(object):
       logging.info("Nothing to send on hpfeeds channel artemis.attachments")
 
   def main():
+    logging.debug("[+] In artemisfilehandler module")
     try:
       attach_thread = threading.Thread(target = send_attach, args = []).run()
     except Exception, e:
