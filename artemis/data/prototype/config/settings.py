@@ -6,9 +6,11 @@ receiver_config = {'host': '0.0.0.0', 'port': 25}
 analyzer_relay_config = {'host': 'localhost', 'port': 2500}
 analyzer_config = {'attachpath':'attachments/',
                    'inlinepath':'attachments/inline/',
+                   'hpfeedattach':'attachments/hpfeedattach/',
                    'queuepath':'queue/',
                    'undeliverable_path':'distorted/',
                    'rawspampath':'rawspams/',
+                   'hpfeedspam':'rawspams/hpfeedspam/',
                    'relay':True,
                    'indivcounter':30,
                    'globalcounter':1000,

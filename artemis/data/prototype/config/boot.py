@@ -38,7 +38,9 @@ settings.analyzer = Analyzer(settings.analyzer_config['queuepath'],
                              settings.analyzer_config['hpf_host'],
                              settings.analyzer_config['hpf_port'],
                              settings.analyzer_config['hpf_ident'],
-                             settings.analyzer_config['hpf_secret'])
+                             settings.analyzer_config['hpf_secret'],
+                             settings.analyzer_config['hpfeedattach'],
+                             settings.analyzer_config['hpfeedspam'])
 
 
 Router.defaults(**settings.router_defaults)

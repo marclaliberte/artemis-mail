@@ -4,6 +4,7 @@
 import logging
 import datetime
 import subprocess
+import threading
 import os
 import sys
 import json
@@ -16,13 +17,14 @@ import hpfeeds.hpfeeds as hpfeeds
 #import artemisdbconfig #import when mongo added
 
 class DBHandler(object):
-  def __init__(self,attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret):
+  def __init__(self,attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret,filehandler):
     self.attachpath = attachpath
     self.inlinepath = inlinepath
     self.hpf_host = hpf_host
     self.hpf_port = hpf_port
     self.hpf_ident = hpf_ident
     self.hpf_secret = hpf_secret
+    self.filehandler = filehandler
 
   def push(self):
     logging.info("[+]Inside artemispushtodb Module")
@@ -157,6 +159,8 @@ class DBHandler(object):
           logging.critical("[-] Error (artemispushtodb ip) in publishing to hpfeeds. %s" % e)
                 
     logging.info("[+]artemispushtodb Module: Calling sendfiles module.")
+    file_thread = threading.Thread(name='Artemis File Handler', target=self.filehandler.main())
+    file_thread.start()
 #    subprocess.Popen(['python', os.path.dirname(os.path.realpath(__file__)) + '/hpfeeds/sendfiles.py'])
 #TODO: INTEGRATE INTO NON-BLOCKING HANDLER
         
