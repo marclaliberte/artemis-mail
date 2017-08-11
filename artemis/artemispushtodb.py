@@ -62,7 +62,7 @@ class DBHandler(object):
         while i < len(record['attachmentFile']):
           logging.debug("Attachment found, saving locally")
           fileName = str(record['s_id']) + "-a-" + str(record['attachmentFileName'][i])
-          path = attachpath + fileName
+          path = self.attachpath + fileName
           attachFile = open(path, 'wb')
           attachFile.write(record['attachmentFile'][i])
           attachFile.close()
@@ -84,7 +84,7 @@ class DBHandler(object):
         while i < len(record['inlineFile']):
           logging.debug("Inline file found, saving locally")
           fileName = str(record['s_id']) + "-i-" + str(record['inlineFileName'][i])
-          path = inlinepath + fileName
+          path = self.inlinepath + fileName
           attachFile = open(path, 'wb')
           attachFile.write(record['inlineFile'][i])
           attachFile.close()
