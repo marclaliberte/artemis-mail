@@ -50,7 +50,7 @@ class FileHandler(object):
         d = {'s_id': spam_id, 'attachment':attachment, 'name':name}
         data = json.dumps(d)
         with self.lock:
-          hpc.publish(channels['attachments'],data)
+          self.hpc.publish(channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
         shutil.move(self.path['attach']+f, self.path['hpfeedattach'])
@@ -59,6 +59,7 @@ class FileHandler(object):
 
   def main(self):
     logging.debug("[+] In artemisfilehandler module")
+    self.hpc = hpfeeds.new(self.hpf_host,self.hpf_port,self.hpf_ident,self.hpf_secret)
     try:
       attach_thread = threading.Thread(target = self.send_attach, args = []).run()
     except Exception, e:
