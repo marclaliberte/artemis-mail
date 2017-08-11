@@ -50,7 +50,7 @@ class FileHandler(object):
         d = {'s_id': spam_id, 'attachment':attachment, 'name':name}
         data = json.dumps(d)
         with self.lock:
-          self.hpc.publish(channels['attachments'],data)
+          self.hpc.publish(self.channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
         shutil.move(self.path['attach']+f, self.path['hpfeedattach'])
