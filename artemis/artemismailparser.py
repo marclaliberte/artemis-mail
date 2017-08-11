@@ -77,7 +77,7 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
     
     return ssdeep.hash(data)
 
-  def fix_padding_for_attachments(payload):
+  def fix_padding_for_attachments(self,payload):
     logging.critical("\t[+]Fixing Padding for Attachment if needed")
     payload = payload.rstrip()
     missing_padding = (4 - len(payload) % 4) % 4
