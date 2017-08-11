@@ -30,8 +30,8 @@ class ArtemisScheduler(object):
         self.dbhandler.sendfeed()
     else: 
       if self.hpfeeds is True:
-      logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
-      self.dbhandler.sendfeed()
+        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
+        self.dbhandler.sendfeed()
 
   def schedule(self):
     sched = Scheduler()
