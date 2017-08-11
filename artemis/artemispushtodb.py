@@ -60,6 +60,7 @@ class DBHandler(object):
       if len(record['attachmentFile']) > 0:
         i = 0
         while i < len(record['attachmentFile']):
+          logging.debug("Attachment found, saving locally")
           fileName = str(record['s_id']) + "-a-" + str(record['attachmentFileName'][i])
           path = attachpath + fileName
           attachFile = open(path, 'wb')
@@ -81,6 +82,7 @@ class DBHandler(object):
       if len(record['inlineFile']) > 0:
         i = 0
         while i < len(record['inlineFile']):
+          logging.debug("Inline file found, saving locally")
           fileName = str(record['s_id']) + "-i-" + str(record['inlineFileName'][i])
           path = inlinepath + fileName
           attachFile = open(path, 'wb')
