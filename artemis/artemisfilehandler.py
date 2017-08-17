@@ -53,7 +53,7 @@ class FileHandler(object):
           self.hpc.publish(self.hpf_channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
-        shutil.move(self.path['attach']+f, self.path['hpfeedattach'])
+        shutil.move(os.path.join(self.path['attach'],f), os.path.join(self.path['hpfeedattach'],f))
     else:
       logging.info("Nothing to send on hpfeeds channel artemis.attachments")
 

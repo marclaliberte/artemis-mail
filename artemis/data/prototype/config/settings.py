@@ -25,6 +25,8 @@ handlers = ['app.handlers.sample','app.handlers.spampot']
 router_defaults = {'host': '.+'}
 template_config = {'dir':'app','module':'templates'}
 
+blackhole_emails = []
+
 scheduler_config = {'timer': 60}
 
 # the config/boot.py will turn these values into variables set in settings

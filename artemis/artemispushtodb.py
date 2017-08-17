@@ -30,9 +30,6 @@ class DBHandler(object):
     logging.info("[+]Inside artemispushtodb Module")
 #    exeSql = artemisdbconfig.dbconnect() #Fix when mongo added
     
-#    attachpath = server.artemisconf.get('analyzer', 'attachpath')
-#    inlinepath = server.artemisconf.get('analyzer', 'inlinepath')    
-    
 
     """    
     truncate = ['truncate attachments','truncate links', 'truncate sensors', 'truncate spam']
