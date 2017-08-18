@@ -1,4 +1,4 @@
-import logging.config
+import logging.config, logging.handlers
 
 from artemis.routing import Router
 from artemis.server import Relay, SMTPReceiver, QueueReceiver
