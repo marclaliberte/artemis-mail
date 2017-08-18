@@ -60,49 +60,52 @@ class OldRecordHandler(object):
         record['counter'] += 1
         logging.info("value of record counter has reached: %s" % record['counter'])
             
-        if self.relay is True and mailFields['to'].split("@")[1] not in self.blackhole_domains:
-                
-          if (int(server.QueueReceiver.totalRelay) > self.globalcounter):
-            logging.info("[+]artemisprocessold Module: Limit reached. No relay.")
-                                  
-          elif next((i for i, sublist in enumerate([myval for myval in server.whitelist_ids.values()]) if mailFields['to'] in sublist), -1) > -1:
-            logging.info("[+]artemisprocessold Module: Recipient found in white list - relaying")
-                    
-            # Following 3 lines does the relaying
-            processMessage = server.QueueReceiver(self.queuepath)
-            processMessage.process_message(msgMailRequest)
-                    
-            record['relayed'] += 1
-            server.QueueReceiver.totalRelay += 1
+        if self.relay is True:
+          if mailFields['to'].split("@")[1] in self.blackhole_domains:
+              logging.info("Email in blackhole_domains, skipping relay")
           else:
-            if record['counter'] <= 11:
-              if record['counter'] == 11:
-                logging.info("counter is = 11")
-                logging.info("automated scanning has started - Not relaying anymore")
-                server.whitelist_ids.pop(mailFields['s_id'], None)
+                
+            if (int(server.QueueReceiver.totalRelay) > self.globalcounter):
+              logging.info("[+]artemisprocessold Module: Limit reached. No relay.")
+                                  
+            elif next((i for i, sublist in enumerate([myval for myval in server.whitelist_ids.values()]) if mailFields['to'] in sublist), -1) > -1:
+              logging.info("[+]artemisprocessold Module: Recipient found in white list - relaying")
+                    
+              # Following 3 lines does the relaying
+              processMessage = server.QueueReceiver(self.queuepath)
+              processMessage.process_message(msgMailRequest)
+                    
+              record['relayed'] += 1
+              server.QueueReceiver.totalRelay += 1
+            else:
+              if record['counter'] <= 11:
+                if record['counter'] == 11:
+                  logging.info("counter is = 11")
+                  logging.info("automated scanning has started - Not relaying anymore")
+                  server.whitelist_ids.pop(mailFields['s_id'], None)
                             
-                logging.info("poping automated key")
-                for key, value in server.whitelist_ids.items():
-                  logging.info("key: %s, value: %s" % (key, value))
+                  logging.info("poping automated key")
+                  for key, value in server.whitelist_ids.items():
+                    logging.info("key: %s, value: %s" % (key, value))
                             
-              else:
-                logging.info("[+]artemisprocessold Module: Adding recipient to whitelist and relaying")
-                                    
-                if mailFields['s_id'] in server.whitelist_ids:
-                  logging.info("spam-id in whitlist - extending")
-                  server.whitelist_ids[mailFields['s_id']].append(mailFields['to'])
                 else:
-                  logging.info("spam-id not in whitelist - adding")
-                  server.whitelist_ids[mailFields['s_id']] = mailFields['to'].split()
+                  logging.info("[+]artemisprocessold Module: Adding recipient to whitelist and relaying")
+                                    
+                  if mailFields['s_id'] in server.whitelist_ids:
+                    logging.info("spam-id in whitlist - extending")
+                    server.whitelist_ids[mailFields['s_id']].append(mailFields['to'])
+                  else:
+                    logging.info("spam-id not in whitelist - adding")
+                    server.whitelist_ids[mailFields['s_id']] = mailFields['to'].split()
                             
-                logging.info("\n\nprocessold after adding new recipient\n\n")
-                for key, value in server.whitelist_ids.items():
-                  logging.info("key: %s, value: %s" % (key, value))
+                  logging.info("\n\nprocessold after adding new recipient\n\n")
+                  for key, value in server.whitelist_ids.items():
+                    logging.info("key: %s, value: %s" % (key, value))
                             
-                # Following 3 lines does the relaying
-                processMessage = server.QueueReceiver(self.queuepath)
-                processMessage.process_message(msgMailRequest)
+                  # Following 3 lines does the relaying
+                  processMessage = server.QueueReceiver(self.queuepath)
+                  processMessage.process_message(msgMailRequest)
 
-                record['relayed'] += 1
-                server.QueueReceiver.totalRelay += 1
+                  record['relayed'] += 1
+                  server.QueueReceiver.totalRelay += 1
         
