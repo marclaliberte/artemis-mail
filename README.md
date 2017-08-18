@@ -15,6 +15,15 @@ Installing
 `cd artemis-mail`
 `python setup.py install`
 
+
+Setup
+==========
+
+`artemis gen artemis`
+`cd artemis`
+Edit config/settings.py
+`artemis start`
+
 Project Information
 ===================
 
