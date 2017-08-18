@@ -33,13 +33,15 @@ class Analyzer(object):
                hpf_ident,
                hpf_secret,
                hpfeedattach,
-               hpfeedspam):
+               hpfeedspam,
+               blackhole_domains):
 
     self._create_dirs([undeliverable_path,rawspampath,hpfeedspam,attachpath,inlinepath,hpfeedattach])
 
+
     self.filehandler = FileHandler(hpf_host,hpf_port,hpf_ident,hpf_secret,rawspampath,attachpath,hpfeedspam,hpfeedattach)
-    self.newrecordhandler = NewRecordHandler(rawspampath,queuepath,globalcounter,relay)
-    self.oldrecordhandler = OldRecordHandler(globalcounter,queuepath,relay)
+    self.newrecordhandler = NewRecordHandler(rawspampath,queuepath,globalcounter,relay,blackhole_domains)
+    self.oldrecordhandler = OldRecordHandler(globalcounter,queuepath,relay,blackhole_domains)
     self.concluder = Conclude(self.newrecordhandler,self.oldrecordhandler)
     self.mailparser = ArtemisMailParser(queuepath,undeliverable_path,self.concluder)
     self.dbhandler = DBHandler(attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret,self.filehandler)

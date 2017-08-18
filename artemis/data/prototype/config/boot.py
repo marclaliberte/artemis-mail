@@ -40,7 +40,8 @@ settings.analyzer = Analyzer(settings.analyzer_config['queuepath'],
                              settings.analyzer_config['hpf_ident'],
                              settings.analyzer_config['hpf_secret'],
                              settings.analyzer_config['hpfeedattach'],
-                             settings.analyzer_config['hpfeedspam'])
+                             settings.analyzer_config['hpfeedspam'],
+                             settings.blackhole_domains)
 
 
 Router.defaults(**settings.router_defaults)

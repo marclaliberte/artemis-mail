@@ -25,7 +25,7 @@ handlers = ['app.handlers.sample','app.handlers.spampot']
 router_defaults = {'host': '.+'}
 template_config = {'dir':'app','module':'templates'}
 
-blackhole_emails = []
+blackhole_domains = []
 
 scheduler_config = {'timer': 60}
 

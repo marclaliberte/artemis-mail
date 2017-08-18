@@ -4,10 +4,11 @@ import datetime
 import server
 
 class OldRecordHandler(object):
-  def __init__(self,globalcounter,queuepath,relay):
+  def __init__(self,globalcounter,queuepath,relay,blackhole_domains):
     self.globalcounter = globalcounter
     self.queuepath = queuepath
     self.relay = relay
+    self.blackhole_domains = blackhole_domains
 
   def main(self,mailFields, matchedHash, key, msgMailRequest):
     logging.info("[+]Inside artemisprocessold Module.")
@@ -59,7 +60,7 @@ class OldRecordHandler(object):
         record['counter'] += 1
         logging.info("value of record counter has reached: %s" % record['counter'])
             
-        if self.relay is True:
+        if self.relay is True and mailFields['to'].split("@")[1] not in self.blackhole_domains:
                 
           if (int(server.QueueReceiver.totalRelay) > self.globalcounter):
             logging.info("[+]artemisprocessold Module: Limit reached. No relay.")

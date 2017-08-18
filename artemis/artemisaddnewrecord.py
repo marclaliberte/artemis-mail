@@ -12,11 +12,12 @@ import datetime
 import server
 
 class NewRecordHandler(object):
-  def __init__(self,rawspampath,queuepath,globalcounter,relay):
+  def __init__(self,rawspampath,queuepath,globalcounter,relay,blackhole_domains):
     self.rawspampath = rawspampath
     self.queuepath = queuepath
     self.globalcounter = globalcounter
     self.relay = relay
+    self.blackhole_domains = blackhole_domains
 
   def main(self,mailFields, key, msgMailRequest):
     """Main function. 
@@ -58,7 +59,7 @@ class NewRecordHandler(object):
                 'counter':1, 
                 'relayed':0 }
 
-    if self.relay is True:
+    if self.relay is True and mailFields['to'].split("@")[1] not in self.blackhole_domains:
 
       if (int(server.QueueReceiver.totalRelay) > self.globalcounter):
         logging.info("[+]artemisaddnewrecord Module: Limit reached. No relay.")
