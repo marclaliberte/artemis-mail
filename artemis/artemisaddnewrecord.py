@@ -11,6 +11,8 @@ import datetime
 
 import server
 
+logging.getLogger("analyzer")
+
 class NewRecordHandler(object):
   def __init__(self,rawspampath,queuepath,globalcounter,relay,blackhole_domains):
     self.rawspampath = rawspampath

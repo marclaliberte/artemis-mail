@@ -18,6 +18,8 @@ import shutil
 import base64
 import hpfeeds.hpfeeds as hpfeeds
 
+logging.getLogger("analyzer")
+
 class FileHandler(object):
   def __init__(self,hpf_host,hpf_port,hpf_ident,hpf_secret,rawspampath,attachpath,hpfeedspam,hpfeedattach):
     self.hpf_host = hpf_host

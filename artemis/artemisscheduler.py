@@ -10,6 +10,7 @@ from apscheduler.scheduler import Scheduler
 
 import server
 
+logging.getLogger("analyzer")
 
 class ArtemisScheduler(object):
   def __init__(self,dbhandler,timer=60,localdb=True,hpfeeds=True):

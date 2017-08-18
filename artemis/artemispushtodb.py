@@ -14,7 +14,8 @@ import copy
 
 import server
 import hpfeeds.hpfeeds as hpfeeds
-#import artemisdbconfig #import when mongo added
+
+logging.getLogger("analyzer")
 
 class DBHandler(object):
   def __init__(self,attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret,filehandler):

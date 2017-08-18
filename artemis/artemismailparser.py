@@ -19,6 +19,8 @@ from email.utils import parseaddr
 
 import ssdeep
 
+logging.getLogger("analyzer")
+
 
 class ArtemisMailParser(object):
   def __init__(self,queuepath,undeliverable_path,concluder):

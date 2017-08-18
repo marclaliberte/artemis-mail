@@ -3,6 +3,8 @@ import datetime
 
 import server
 
+logging.getLogger("analyzer")
+
 class OldRecordHandler(object):
   def __init__(self,globalcounter,queuepath,relay,blackhole_domains):
     self.globalcounter = globalcounter
