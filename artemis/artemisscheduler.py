@@ -10,6 +10,7 @@ from apscheduler.scheduler import Scheduler
 
 import server
 
+logging.getLogger("analyzer")
 
 class ArtemisScheduler(object):
   def __init__(self,dbhandler,timer=60,localdb=True,hpfeeds=True):
@@ -25,10 +26,13 @@ class ArtemisScheduler(object):
     if self.localdb is True:
       logging.info("[+]artemisscheduler.py: Pushing data to local db")
       self.dbhandler.push()
-
-    if self.hpfeeds is True:
-      logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
-      self.dbhandler.sendfeed()
+      if self.hpfeeds is True:
+        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
+        self.dbhandler.sendfeed()
+    else: 
+      if self.hpfeeds is True:
+        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
+        self.dbhandler.sendfeed()
 
   def schedule(self):
     sched = Scheduler()

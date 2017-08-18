@@ -11,6 +11,7 @@ import logging
 import server
 import ssdeep
 
+logging.getLogger("analyzer")
 
 class Conclude(object):
   def __init__(self,newrecordhandler,oldrecordhandler):

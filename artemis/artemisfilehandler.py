@@ -18,6 +18,8 @@ import shutil
 import base64
 import hpfeeds.hpfeeds as hpfeeds
 
+logging.getLogger("analyzer")
+
 class FileHandler(object):
   def __init__(self,hpf_host,hpf_port,hpf_ident,hpf_secret,rawspampath,attachpath,hpfeedspam,hpfeedattach):
     self.hpf_host = hpf_host
@@ -32,8 +34,11 @@ class FileHandler(object):
                  'hpfeedattach' :hpfeedattach}
     self.lock = threading.Lock()
 
-  def send_attach():
-    files = [f for f in os.listdir(path['attach']) if os.path.isfile(os.path.join(path['attach'], f))]
+    logging.debug("[+] FileHandler init")
+
+  def send_attach(self):
+    logging.debug("[+] artemisfilehandler attempting to send attachment")
+    files = [f for f in os.listdir(self.path['attach']) if os.path.isfile(os.path.join(self.path['attach'], f))]
  
     if len(files) > 0:
       for f in files:
@@ -41,22 +46,24 @@ class FileHandler(object):
         spam_id = f.split('-')[0]
         name = f.split('-')[2]
 
-        with open(path['attach']+f) as fp:
+        with open(self.path['attach']+f) as fp:
           attachment = base64.b64encode(fp.read())
 
         d = {'s_id': spam_id, 'attachment':attachment, 'name':name}
         data = json.dumps(d)
-        with lock:
-          hpc.publish(channels['attachments'],data)
+        with self.lock:
+          self.hpc.publish(self.hpf_channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
-        shutil.move(path['attach']+f, path['hpfeedattach'])
+        shutil.move(os.path.join(self.path['attach'],f), os.path.join(self.path['hpfeedattach'],f))
     else:
       logging.info("Nothing to send on hpfeeds channel artemis.attachments")
 
-  def main():
+  def main(self):
+    logging.debug("[+] In artemisfilehandler module")
+    self.hpc = hpfeeds.new(self.hpf_host,self.hpf_port,self.hpf_ident,self.hpf_secret)
     try:
-      attach_thread = threading.Thread(target = send_attach, args = []).run()
+      attach_thread = threading.Thread(target = self.send_attach, args = []).run()
     except Exception, e:
       logging.critical("[-] artemisfilehandler main: Error. %s" % e)
 
