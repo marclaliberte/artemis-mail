@@ -10,9 +10,12 @@ Artemis has been released uner the GNU GPLv3, as published by the FSF.
 Installing
 ==========
 
-`apt-get install python g++ python-dev python-pip exim4-daemon-light libmysqlclient-dev make libffi-dev libfuzzy-dev automake autoconf`
+`apt-get install python g++ python-dev python-pip libmysqlclient-dev make libffi-dev libfuzzy-dev automake autoconf`
+
 `git clone https://github.com/marclaliberte/artemis-mail.git`
+
 `cd artemis-mail`
+
 `python setup.py install`
 
 
@@ -20,8 +23,10 @@ Setup
 ==========
 
 `artemis gen artemis`
+
 `cd artemis`
 Edit config/settings.py
+
 `artemis start`
 
 Project Information
