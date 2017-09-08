@@ -65,4 +65,4 @@ class Conclude(object):
         count += 1
 
       if count == len(records):
-        self.oldrecordhandler.main(mailFields, key, msgMailRequest)
+        self.newrecordhandler.main(mailFields, key, msgMailRequest)
