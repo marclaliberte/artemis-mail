@@ -72,7 +72,7 @@ class NewRecordHandler(object):
           logging.info("[+]artemisaddnewrecord Module: Recipient found in white list - relaying")
             
      	  # Following 3 lines does the relaying
-  	  processMessage = server.QueueReceiver(self.queueath)
+  	  processMessage = server.QueueReceiver(self.queuepath)
 	  processMessage.process_message(msgMailRequest)
 
           newRecord['relayed'] += 1
