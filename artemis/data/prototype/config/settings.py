@@ -19,7 +19,7 @@ analyzer_config = {'attachpath':'attachments/',
                    'hpf_port':20000,
                    'hpf_ident':'Artemis-Server',
                    'hpf_secret':'SuperSecurePassword',
-                   'hpf_channel':{"parsed": "shiva.parsed", "ip_url": "shiva.urls"}}
+                   'hpf_channel':{"parsed": "artemis.parsed", "ip_url": "artemis.urls"}}
 
 handlers = ['app.handlers.sample','app.handlers.spampot']
 router_defaults = {'host': '.+'}

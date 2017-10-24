@@ -1,7 +1,8 @@
 #! /usr/bin/python
 """
-Schedules a job to reset individual counters of relayed mails to 0. 
-This would make sure each spammer finds spamPot relaying everyday.
+Schedules a job to reset individual counters of relayed mail to 0.
+Also sends records to hpfeeds.
+This allows the spam pot to relay messages for new spammers. 
 """
 import datetime
 import logging
@@ -13,29 +14,23 @@ import server
 logging.getLogger("analyzer")
 
 class ArtemisScheduler(object):
-  def __init__(self,dbhandler,timer=60,localdb=True,hpfeeds=True):
+  def __init__(self,hpfhandler,timer=60):
     self.duration = timer
-    self.dbhandler = dbhandler
+    self.hpfhandler = hpfhandler
     self.localdb = localdb
     self.hpfeeds = hpfeeds
 
   def resetcounter(self):
-    self.dbhandler.cleanup()
-    self.dbhandler.getspammeremails()
+    self.hpfhandler.cleanup()
+    self.hpfhandler.getspammeremails()
 
-    if self.localdb is True:
-      logging.info("[+]artemisscheduler.py: Pushing data to local db")
-      self.dbhandler.push()
-      if self.hpfeeds is True:
-        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
-        self.dbhandler.sendfeed()
-    else: 
-      if self.hpfeeds is True:
-        logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
-        self.dbhandler.sendfeed()
+    logging.info("[+]artemisscheduler.py: Pushing files to local storage")
+    self.hpfhandler.push()
+    logging.info("[+]artemisscheduler.py: Sending data to hpfeeds")
+    self.hpfhandler.sendfeed()
 
   def schedule(self):
     sched = Scheduler()
     sched.add_interval_job(self.resetcounter, minutes=self.duration)
     sched.start()
-    logging.info("Artemis scheduler, which dumps data into maindb, resets global counter and sends data on hpfeeds, started at %s and would execute every %d minutes " % (datetime.datetime.now(), self.duration))
+    logging.info("Artemis scheduler, which resets global counter and sends data on hpfeeds, started at %s, executes every %d minutes " % (datetime.datetime.now(), self.duration))

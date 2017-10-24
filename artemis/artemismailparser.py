@@ -1,7 +1,7 @@
-"""This module accepts spam file name as parameter and returns all parsed 
-fields as items of a dictionary. In current state, it's accepting spam file
-name as parameter, parsing all fields, saving in a dictionary and forwarding 
-to artemisconclude module.
+"""
+This module accepts spam file name as parameter and parses all mail fields
+into a dictionary. It then hands the dictionary off to the artemisconclude
+module to decide if the spam message is new or a repeat.
 """
 
 from email.header import decode_header
@@ -29,11 +29,12 @@ class ArtemisMailParser(object):
     self.concluder = concluder
     # Global dictionary to store parsed fields of spam
     self.mailFields = {'headers':'', 'to':'', 'from':'', 'subject':'', 'date':'', 'firstSeen':'', 'lastSeen':'', 'firstRelayed':'', 'lastRelayed':'', 'sourceIP':'', 'sensorID':'', 'text':'', 'html':'', 'inlineFileName':[], 'inlineFile':[], 'inlineFileMd5':[], 'attachmentFileName':[], 'attachmentFile':[], 'attachmentFileMd5':[], 'links':[], 'ssdeep':'', 's_id':'', 'len':'', 'user':''}
+    #Random text to help fuzzy hash
     self.randomText = """@Deprecation
 In Solr 1.3, many classes were moved around. Although classes compiled against 1.2 will run in 1.3, updating class references is recommended.
 Specifically: many classes from org.apache.util moved to org.apache.common.util many classes from org.apache.solr.request moved to org.apache.solr.common.params org.apache.solr.request.StandardRequestHandler moved to org.apache.solr.handler.StandardRequestHandler and is a subclass of org.apache.solr.handler.SearchHandler
 org.apache.solr.request.DisMaxRequestHandler moved to org.apache.solr.handler.DisMaxRequestHandler and deprecated in favor of adding 'defType=dismax' to StandardRequestHandler init params
-Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
+Solr1.3 (last edited 2009-09-20 22:04:51 by localhost ARTEMIS."""
 
   def md5checksum(self,filepath):
     m = hashlib.md5()
@@ -41,7 +42,8 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
     return m.hexdigest()
   
   def linkparser(self,input_body):
-    """Returns a list containing URLs.
+    """
+    Returns a list containing URLs from message body.
     """  
     
     URL_REGEX_PATTERN = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
@@ -51,13 +53,12 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
     return url_list
 
   def getfuzzyhash(self):
-    """Returns fuzzy hash of spam.
-    This function returns hash generated using the ssdeep library.
+    """
+    Returns fuzzy hash of spam using the ssdeep library.
     Hash is generated using the combination of mail's body + subject.
     Msg length is being checked because SSDEEP has some issues with comparing hashes
-    of small spams. If spam's body is very less or non existent, we add our randomText to body.
-    There would be certain cases when there wouldn't be any html or text portion i.e. email body would be empty. Hence forth len = html/text + subject
-    In artemismaindb.py if len < 10 then keeping comparision ratio higher
+    of small spams. If spam's body is very small or non-existent, we add our randomText to the body.
+    There are certain cases when the email body is empty. Hence len = html/text + subject
     """
     if self.mailFields['html']:
       if len(self.mailFields['html']) < 150:
@@ -88,8 +89,8 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
 
 
   def movebadsample(self,key, msg):
-    """Copies the troublesome spam to different folder and removes it from 
-    queue.
+    """
+    Copies the troublesome spam to different folder and removes it from queue.
     """
     
     logging.critical("\n**** [-] Error!!! ****")
@@ -98,7 +99,8 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
     shutil.copyfile(self.queuepath + 'new/' + key, self.undeliverable_path + key)
     
   def writepartsrecurse(self,msg):
-    """This module recursively parses all fields of multipart spam mail
+    """
+    This module recursively parses all fields of multipart spam mail
     and stores them in the dictionary.
     """
     while isinstance(msg.get_payload(), email.Message.Message):
@@ -110,8 +112,8 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
 
     else:
       content = msg.get_content_type()
-
-      file_name, encoding = decode_header(msg.get_filename())[0]         #Function returns the encoding type if any
+      #Function returns the encoding type if any
+      file_name, encoding = decode_header(msg.get_filename())[0]
 
       file_name = file_name.replace("'", "")
       if encoding == None:
@@ -120,20 +122,25 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
         fileName = file_name.decode(encoding)
         fileName = fileName.encode('utf-8')
 
-      if msg.get_content_type() == 'text/plain' and msg['Content-Disposition'] == None:  # value of content-dispostion is None in this case
-        self.mailFields['text'] = msg.get_payload(decode=True)           # decode says - if in base64, decode the value
+      if msg.get_content_type() == 'text/plain' and msg['Content-Disposition'] == None:
+        # value of content-dispostion is None in this case
+        # decode says - if in base64, decode the value
+        self.mailFields['text'] = msg.get_payload(decode=True)
         
-      elif msg.get_content_type() == 'text/html':                   # value of content-dispostion is None in this case
+      elif msg.get_content_type() == 'text/html':
+        # value of content-dispostion is None in this case
         self.mailFields['html'] = msg.get_payload(decode=True)
         
-      elif msg['Content-Disposition'] != None and msg['Content-Disposition'].find('inline;') >= 0:   # if 'inline' file found
+      elif msg['Content-Disposition'] != None and msg['Content-Disposition'].find('inline;') >= 0:
+        # if 'inline' file found
         logging.critical("Inside inline handling")
         payload = self.fix_padding_for_attachments(msg.get_payload())
         self.mailFields['attachmentFile'].append(payload)
         self.mailFields['attachmentFileName'].append(fileName)
         self.mailFields['attachmentFileMd5'].append(self.md5checksum(payload))
 
-      elif msg['Content-Disposition'] != None and msg['Content-Disposition'].find('attachment;') >= 0:    # if attachment found
+      elif msg['Content-Disposition'] != None and msg['Content-Disposition'].find('attachment;') >= 0:
+        # if attachment found
         logging.critical("Inside Attachment handling")
         payload = self.fix_padding_for_attachments(msg.get_payload())
         self.mailFields['attachmentFile'].append(payload)
@@ -148,15 +155,15 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
         self.mailFields['attachmentFileMd5'].append(self.md5checksum(payload))
 
       else:
-        logging.critical("[-] - (Module ShivaParser.py) No match for text/html/content_type or Content-Disposition -")
+        logging.critical("[-] - (Module ArtemisParser.py) No match for text/html/content_type or Content-Disposition -")
 
     return None
 
     
   def main(self,key, msgMailRequest):
-    """This function gets called from server.py module
     """
-    #logging.critical("inside mailparser module")
+    This function gets called from server.py module
+    """
     
     self.mailFields = {'headers':'', 'to':'', 'from':'', 'subject':'', 'date':'', 'firstSeen':'', 'lastSeen':'', 'firstRelayed':'', 'lastRelayed':'', 'sourceIP':'', 'sensorID':'', 'text':'', 'html':'', 'inlineFileName':[], 'inlineFile':[], 'inlineFileMd5':[], 'attachmentFileName':[], 'attachmentFile':[], 'attachmentFileMd5':[], 'links':[], 'ssdeep':'', 'len':'', 's_id':''}
   
@@ -177,8 +184,6 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
     self.mailFields['headers'] = headerString
     self.mailFields['headers'] = str(self.mailFields['headers']).replace("'", "")
 
-
-#
     try:
       try:
         if msg['to'] != None:
@@ -293,5 +298,6 @@ Solr1.3 (last edited 2009-09-20 22:04:51 by localhost SHIVA."""
       self.movebadsample(key, "[-] Error (Module artemismailparser.py) - some issue in parsing file %s %s \n" % (key, e))
       return None
 
+    # Hand message off to concluder module
     self.concluder.main(self.mailFields, key, msgMailRequest)
     return None
