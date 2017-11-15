@@ -65,4 +65,4 @@ behave correctly given that constraint then please voice your concerns.
 Development
 ===========
 
-Salmon is written entirely in Python and runs on Python 2.7.
+Artemis is written entirely in Python and runs on Python 2.7.
