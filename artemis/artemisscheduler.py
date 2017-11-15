@@ -17,8 +17,6 @@ class ArtemisScheduler(object):
   def __init__(self,hpfhandler,timer=60):
     self.duration = timer
     self.hpfhandler = hpfhandler
-    self.localdb = localdb
-    self.hpfeeds = hpfeeds
 
   def resetcounter(self):
     self.hpfhandler.cleanup()
