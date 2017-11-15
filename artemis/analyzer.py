@@ -36,7 +36,7 @@ class Analyzer(object):
     self._create_dirs([undeliverable_path,rawspampath,hpfeedspam,attachpath,inlinepath,hpfeedattach])
 
     #Handler for new spam messages
-    self.newrecordhandler = NewRecordHandler(rawspampath,queuepath,globalcounter,relay,blackhole_domains,self.hpfhandler)
+    self.newrecordhandler = NewRecordHandler(rawspampath,queuepath,globalcounter,relay,blackhole_domains)
     #Handler for old repeat spam messages
     self.oldrecordhandler = OldRecordHandler(globalcounter,queuepath,relay,blackhole_domains)
     #Handler for deciding if a message is new spam or repeat spam
