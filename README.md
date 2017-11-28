@@ -11,7 +11,7 @@ Installing
 ==========
 
 `apt-get install python g++ python-dev python-pip libmysqlclient-dev make libffi-dev libfuzzy-dev automake autoconf`
-
+`pip install docutils`
 `git clone https://github.com/marclaliberte/artemis-mail.git`
 
 `cd artemis-mail`
