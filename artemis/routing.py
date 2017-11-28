@@ -439,6 +439,7 @@ class RoutingBase(object):
                             raise
 
 Router = RoutingBase()
+Analyzer_Router = RoutingBase()
 
 class route(object):
     """

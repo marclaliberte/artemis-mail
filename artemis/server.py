@@ -373,7 +373,8 @@ class QueueReceiver(object):
 
         try:
             logging.debug("Message received from Peer: %r, From: %r, to To %r.", msg.Peer, msg.From, msg.To)
-            routing.Router.deliver(msg)
+	    routing.Analyzer_Router.deliver(msg)
+#            routing.Router.deliver(msg)
         except SMTPError, err:
             # looks like they want to return an error, so send it out
             logging.exception("Raising SMTPError when running in a QueueReceiver is unsupported.")
