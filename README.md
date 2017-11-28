@@ -25,7 +25,7 @@ Setup
 `artemis gen artemis`
 
 `cd artemis`
-Edit config/settings.py
+Edit config/settings.py to configure your hpfeeds settings.
 
 `artemis start`
 
@@ -37,7 +37,7 @@ Source
 
 You can find the source on GitHub:
 
-https://github.com/marclaliberte/artemis-mail
+https://github.com/WatchGuard-Threat-Lab/Artemis-Mail
 
 License
 ----
