@@ -45,7 +45,7 @@ settings.analyzer = Analyzer(settings.analyzer_config['queuepath'],
 
 
 Router.defaults(**settings.router_defaults)
-Router.load(settings.handlers)
+Router.load(settings.receiver_handler)
 Router.RELOAD = True
 Router.UNDELIVERABLE_QUEUE = queue.Queue("run/undeliverable")
 
