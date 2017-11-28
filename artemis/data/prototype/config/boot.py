@@ -43,7 +43,7 @@ settings.analyzer = Analyzer(settings.analyzer_config['queuepath'],
                              settings.analyzer_config['hpfeedspam'],
                              settings.blackhole_domains)
 
-Analyzer_Router.default(**settings.router_defaults)
+Analyzer_Router.defaults(**settings.router_defaults)
 Analyzer_Router.load(settings.analyzer_handler)
 Analyzer_Router.RELOAD = True
 Analyzer_Router.UNDELIVERABLE_QUEUE = queue.Queue("run/undeliverable")
