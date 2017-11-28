@@ -28,11 +28,11 @@ def import_settings(boot_also, boot_module="config.boot"):
     multiple times
 
     The location of the settings module can be control via
-    ``SALMON_SETTINGS_MODULE``"""
+    ``ARTEMIS_SETTINGS_MODULE``"""
     global settings
 
     if settings is None:
-        settings_module = os.getenv("SALMON_SETTINGS_MODULE", "config.settings")
+        settings_module = os.getenv("ARTEMIS_SETTINGS_MODULE", "config.settings")
         settings = importlib.import_module(settings_module)
 
     if boot_also:

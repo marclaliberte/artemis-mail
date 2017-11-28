@@ -1,6 +1,6 @@
 import logging.config, logging.handlers
 
-from artemis.routing import Router
+from artemis.routing import Router, Analyzer_Router
 from artemis.server import Relay, SMTPReceiver, QueueReceiver
 from artemis.artemisscheduler import Scheduler
 from artemis import queue, view
@@ -43,9 +43,13 @@ settings.analyzer = Analyzer(settings.analyzer_config['queuepath'],
                              settings.analyzer_config['hpfeedspam'],
                              settings.blackhole_domains)
 
+Analyzer_Router.defaults(**settings.router_defaults)
+Analyzer_Router.load(settings.analyzer_handler)
+Analyzer_Router.RELOAD = True
+Analyzer_Router.UNDELIVERABLE_QUEUE = queue.Queue("run/undeliverable")
 
 Router.defaults(**settings.router_defaults)
-Router.load(settings.handlers)
+Router.load(settings.receiver_handler)
 Router.RELOAD = True
 Router.UNDELIVERABLE_QUEUE = queue.Queue("run/undeliverable")
 

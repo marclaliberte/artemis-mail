@@ -1,10 +1,4 @@
-"""This module decides that whether a spam is new or old. It checks this by 
-comparing the spam against the records which are already there in temporary
-list. It first compares Md5 checksum, if not found, it compares against the
-SSDEEP hash. If spam is new, it passes it to artemisaddnewrecord module,
-for further processing. If it's an old spam, it passes it to artemisprocessold
-module.
-
+"""
 This module processes file attachments which have already been parsed. Using
 hpfeeds it sends full files to the broker.
 """
@@ -55,7 +49,8 @@ class FileHandler(object):
           self.hpc.publish(self.hpf_channels['attachments'],data)
           logging.info("[+] Attachment Published")
 
-        shutil.move(os.path.join(self.path['attach'],f), os.path.join(self.path['hpfeedattach'],f))
+        # Remove file after sending
+        os.remove(os.path.join(self.path['attach'],f))
     else:
       logging.info("Nothing to send on hpfeeds channel artemis.attachments")
 

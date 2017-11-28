@@ -11,7 +11,7 @@ Installing
 ==========
 
 `apt-get install python g++ python-dev python-pip libmysqlclient-dev make libffi-dev libfuzzy-dev automake autoconf`
-
+`pip install docutils`
 `git clone https://github.com/marclaliberte/artemis-mail.git`
 
 `cd artemis-mail`
@@ -25,7 +25,7 @@ Setup
 `artemis gen artemis`
 
 `cd artemis`
-Edit config/settings.py
+Edit config/settings.py to configure your hpfeeds settings.
 
 `artemis start`
 
@@ -37,7 +37,7 @@ Source
 
 You can find the source on GitHub:
 
-https://github.com/marclaliberte/artemis-mail
+https://github.com/WatchGuard-Threat-Lab/Artemis-Mail
 
 License
 ----
@@ -65,4 +65,4 @@ behave correctly given that constraint then please voice your concerns.
 Development
 ===========
 
-Salmon is written entirely in Python and runs on Python 2.7.
+Artemis is written entirely in Python and runs on Python 2.7.

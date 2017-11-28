@@ -1,14 +1,10 @@
 #! /usr/bin/python
-"""
-Schedules a job to reset individual counters of relayed mails to 0. 
-This would make sure each spammer finds spamPot relaying everyday.
-"""
 import datetime
 import logging
 import os
 
 from artemisscheduler import ArtemisScheduler
-from artemispushtodb import DBHandler
+from artemispublish import HPFHandler
 from artemismailparser import ArtemisMailParser
 from artemisaddnewrecord import NewRecordHandler
 from artemisprocessold import OldRecordHandler
@@ -36,16 +32,24 @@ class Analyzer(object):
                hpfeedspam,
                blackhole_domains):
 
+    #Check if directories are present, create if not
     self._create_dirs([undeliverable_path,rawspampath,hpfeedspam,attachpath,inlinepath,hpfeedattach])
 
-
-    self.filehandler = FileHandler(hpf_host,hpf_port,hpf_ident,hpf_secret,rawspampath,attachpath,hpfeedspam,hpfeedattach)
+    #Handler for new spam messages
     self.newrecordhandler = NewRecordHandler(rawspampath,queuepath,globalcounter,relay,blackhole_domains)
+    #Handler for old repeat spam messages
     self.oldrecordhandler = OldRecordHandler(globalcounter,queuepath,relay,blackhole_domains)
+    #Handler for deciding if a message is new spam or repeat spam
     self.concluder = Conclude(self.newrecordhandler,self.oldrecordhandler)
+    #Handler for parsing mail messages
     self.mailparser = ArtemisMailParser(queuepath,undeliverable_path,self.concluder)
-    self.dbhandler = DBHandler(attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret,self.filehandler)
-    self.scheduler = ArtemisScheduler(self.dbhandler,sched_timer)
+    #HPFeeds file handler
+    self.filehandler = FileHandler(hpf_host,hpf_port,hpf_ident,hpf_secret,rawspampath,attachpath,hpfeedspam,hpfeedattach)
+    #Hpfeeds main communication handler
+    self.hpfhandler = HPFHandler(attachpath,inlinepath,hpf_host,hpf_port,hpf_ident,hpf_secret,self.filehandler)
+    #Scheduler for publishing to hpfeeds and cleaning up records
+    self.scheduler = ArtemisScheduler(self.hpfhandler,sched_timer)
+    #Handler for grabbing spam messages out of queue
     self.receiver = QueueReceiver(queuepath)
 
   def start(self):

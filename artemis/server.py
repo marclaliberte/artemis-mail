@@ -20,7 +20,6 @@ from artemis.bounce import PRIMARY_STATUS_CODES, SECONDARY_STATUS_CODES, COMBINE
 
 import artemisscheduler
 import artemismailparser
-#import artemisdbconfig #import once mongodb enabled
 
 smtpd.__version__ = "Salmon Mail router SMTPD, version %s" % __version__
 lmtpd.__version__ = "Salmon Mail router LMTPD, version %s" % __version__
@@ -340,33 +339,6 @@ class QueueReceiver(object):
 
         inq = queue.Queue(self.queue_dir)
 
-        """
-        Old Shiva settings, TODO: Map to mongo
-        # Get email-id's of spammers. Mail must get relayed to them.
-        mainDb = shivadbconfig.dbconnectmain()
-        whitelist = "SELECT `recipients` from `whitelist`"
-
-        try:
-            mainDb.execute(whitelist)
-            record = mainDb.fetchone()
-
-            global whitelist_ids
-            
-                  
-            if ((record is None) or (record[0] is None)):
-                whitelist_ids['spammers_email'] = []
-            else:
-                whitelist_ids['spammers_email'] = (record[0].encode('utf-8')).split(",")[-100:]
-                whitelist_ids['spammers_email'] = list(set(whitelist_ids['spammers_email']))
-                
-                logging.info("[+] server Module: whitelist recipients:")
-                for key, value in whitelist_ids.items():
-                    logging.info("key: %s, value: %s" % (key, value))
-            mainDb.close()
-        except mdb.Error, e:
-            logging.critical("[-] Error (Module server.py) - some issue obtaining whitelist: %s" % e)
-        """
-
         while True:
             keys = inq.keys()
 
@@ -401,7 +373,8 @@ class QueueReceiver(object):
 
         try:
             logging.debug("Message received from Peer: %r, From: %r, to To %r.", msg.Peer, msg.From, msg.To)
-            routing.Router.deliver(msg)
+	    routing.Analyzer_Router.deliver(msg)
+#            routing.Router.deliver(msg)
         except SMTPError, err:
             # looks like they want to return an error, so send it out
             logging.exception("Raising SMTPError when running in a QueueReceiver is unsupported.")

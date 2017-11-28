@@ -35,7 +35,7 @@ config = {
     'author': 'Zed A. Shaw',
     'maintainer': 'Marc Laliberte',
     'maintainer_email': 'marc@xoro.co',
-    'version': '0.1.0',
+    'version': '1.0.0',
     'install_requires': install_requires,
     'tests_require': test_requires,
     'setup_requires': ['nose'],

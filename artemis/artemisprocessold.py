@@ -73,7 +73,7 @@ class OldRecordHandler(object):
             elif next((i for i, sublist in enumerate([myval for myval in server.whitelist_ids.values()]) if mailFields['to'] in sublist), -1) > -1:
               logging.info("[+]artemisprocessold Module: Recipient found in white list - relaying")
                     
-              # Following 3 lines does the relaying
+              # Following 2 lines do the relaying
               processMessage = server.QueueReceiver(self.queuepath)
               processMessage.process_message(msgMailRequest)
                     
@@ -104,7 +104,7 @@ class OldRecordHandler(object):
                   for key, value in server.whitelist_ids.items():
                     logging.info("key: %s, value: %s" % (key, value))
                             
-                  # Following 3 lines does the relaying
+                  # Following 2 lines do the relaying
                   processMessage = server.QueueReceiver(self.queuepath)
                   processMessage.process_message(msgMailRequest)
 

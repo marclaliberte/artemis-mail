@@ -1,5 +1,3 @@
-0.1.0-dev
+1.0.0
 =========
-- Update Shiva to run off Salmon fork of Lamson
-- Merge Analyzer server into same env as Receiver
-
+- Initial Release
