@@ -25,7 +25,7 @@ COMMANDS = (
     ("sendmail", "send an email from stdin"),
 )
 
-DEFAULT_PID_FILE = "./run/stmp.pid"
+DEFAULT_PID_FILE = "./run/smtp.pid"
 
 version_info = """
 Artemis-Version:  %s

@@ -1,4 +1,5 @@
-"""This module decides that whether a spam is new or old. It checks this by 
+"""
+This module decides that whether a spam is new or old. It checks this by 
 comparing the spam against the records which are already there in temporary
 list. It first compares Md5 checksum, if not found, it compares against the
 SSDEEP hash. If spam is new, it passes it to artemisaddnewrecord module,
@@ -19,7 +20,8 @@ class Conclude(object):
     self.oldrecordhandler = oldrecordhandler
 
   def main(self,mailFields, key, msgMailRequest):
-    """Decides if a spam is new or old.
+    """
+    Decides if a spam message is new or old.
     Takes following parameters:
     a. mailFields - parsed spam fields,
     b. key - spam file name,

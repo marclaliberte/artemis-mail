@@ -1,5 +1,6 @@
-"""This module inserts spam's details into a temporary list. This gets called 
-everytime our analyzer come across a new/distinct spam. First, all the parser 
+"""
+This module inserts spam's details into a temporary list. This gets called 
+everytime the analyzer come across a new/distinct spam. First, all the parser 
 fields are stored as a dictionary and then, that dictionary is appended into
 the list. 
 """
@@ -14,7 +15,12 @@ import server
 logging.getLogger("analyzer")
 
 class NewRecordHandler(object):
-  def __init__(self,rawspampath,queuepath,globalcounter,relay,blackhole_domains):
+  def __init__(self,
+	rawspampath,
+	queuepath,
+	globalcounter,
+	relay,
+	blackhole_domains):
     self.rawspampath = rawspampath
     self.queuepath = queuepath
     self.globalcounter = globalcounter
@@ -61,6 +67,7 @@ class NewRecordHandler(object):
                 'counter':1, 
                 'relayed':0 }
 
+
     if self.relay is True:
       if mailFields['to'].split("@")[1] in self.blackhole_domains:
           logging.info("Email in blackhole_domains, skipping relay")
@@ -71,7 +78,7 @@ class NewRecordHandler(object):
         elif next((i for i, sublist in enumerate([myval for myval in server.whitelist_ids.values()]) if mailFields['to'] in sublist), -1) > -1:
           logging.info("[+]artemisaddnewrecord Module: Recipient found in white list - relaying")
             
-     	  # Following 3 lines does the relaying
+     	  # Following 2 lines do the relaying
   	  processMessage = server.QueueReceiver(self.queuepath)
 	  processMessage.process_message(msgMailRequest)
 
@@ -85,13 +92,13 @@ class NewRecordHandler(object):
           for key, value in server.whitelist_ids.items():
             logging.info("key: %s, value: %s" % (key, value))
             
-          # Following 3 lines does the relaying
+          # Following 2 lines do the relaying
           processMessage = server.QueueReceiver(self.queuepath)
           processMessage.process_message(msgMailRequest)
 
           newRecord['relayed'] += 1
           server.QueueReceiver.totalRelay += 1
-           
-            
-    records.insert(0, newRecord) #Inserting new record at the first position.
+
+    #Inserting new record at the first position
+    records.insert(0, newRecord)
     del newRecord
